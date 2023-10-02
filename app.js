@@ -12,8 +12,19 @@ const MongoStore = require('connect-mongo');
 const app = express(); 
 const port = 3000 || process.env.PORT;
 
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI
+    })
+}))
+
+app.use(session({ session:false,secret: 'somevalue' }));
 app.use(passport.initialize());
 app.use(passport.session());
+
 
 app.use(express.urlencoded({extended:true}));
 app.use(express.json()); 
@@ -41,4 +52,4 @@ app.get('*',(req,res)=> {
 
 app.listen(port,()=> {
     console.log(`ON Port ${port}!`);
-}) 
+})  
