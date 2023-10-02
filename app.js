@@ -21,7 +21,6 @@ app.use(session({
     })
 }))
 
-app.use(session({ session:false,secret: 'somevalue' }));
 app.use(passport.initialize());
 app.use(passport.session());
 

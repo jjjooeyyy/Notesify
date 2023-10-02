@@ -42,10 +42,21 @@ router.get('/google/callback',
   passport.authenticate('google', { failureRedirect: '/login-failure', successRedirect: '/dashboard' })
   );
 
-
 // Route if something wrong
 router.get('/login-failure',(req,res)=> {
     res.send('Something went wrong.. ')
+})
+
+// Destroy user session (logout)
+router.get('/logout',(req,res)=> {
+    req.session.destroy(error =>{
+        if(error) {
+            console.log(error);
+            res.send('Error logging out');
+        } else {
+            res.redirect('/');
+        }
+    })
 })
 
 // Presist user data after successful authentication
@@ -63,5 +74,4 @@ passport.deserializeUser(async (id, done) => {
     }
   });
   
-
 module.exports = router; 
