@@ -44,7 +44,7 @@ router.get('/google/callback',
 
 // Route if something wrong
 router.get('/login-failure',(req,res)=> {
-    res.send('Something went wrong.. ')
+    res.render('../views/login-failure.ejs');
 })
 
 // Destroy user session (logout)

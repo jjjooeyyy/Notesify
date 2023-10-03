@@ -1,19 +1,26 @@
-<div class="container-fluid">
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4">
-      <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-primary text-decoration-none fw-bold fs-2">
-       Notesify
-      </a>
 
-      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
-        <li><a href="#" class="nav-link px-2 link-dark">Features</a></li>
-        <li><a href="#" class="nav-link px-2 link-dark">FAQs</a></li>
-        <li><a href="/about" class="nav-link px-2 link-dark">About</a></li>
-      </ul>
 
-      <div class="col-md-3 text-end">
-        <a href="/auth/google" type="button" class="btn btn-outline-primary me-2">Sign Up</a>
-        <a href="/auth/google" type="button" class="btn btn-primary">Sign In</a>
+  <div class="container-fluid">
+  <nav class="navbar navbar-expand-lg">
+      <a class="navbar-brand col-md-3 mb-2 mb-md-0 text-primary text-decoration-none fw-bold fs-2" href="/">Notesify</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav nav col-9">
+          <li class="nav-item">
+            <a class="nav-link active px-2 link-secondary" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link px-2 link-dark" href="#">Features</a>
+          </li>
+          <li><a href="#" class="nav-link px-2 link-dark">FAQs</a></li>
+          <li class="nav-item"><a href="/about" class="nav-link px-2 link-dark">About</a></li>
+        </ul>
+        <div class="col-3">
+          <a href="/auth/google" type="button" class="btn btn-outline-primary py-2 my-2">Sign Up</a>
+          <a href="/auth/google" type="button" class="btn btn-primary py-2">Sign In</a>
+        </div>  
       </div>
-    </header>
-  </div>
+  </nav>
+</div>
