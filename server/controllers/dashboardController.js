@@ -10,7 +10,7 @@ exports.dashboard = async(req,res)=> {
     }
 
     try {
-      const notes = await Note.find({});
+     const notes = await Note.find({}); 
 
       res.render('dashboard/index.ejs',{
         userName:req.user.firstName,
