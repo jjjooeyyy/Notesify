@@ -76,6 +76,14 @@ p {
     --bs-pagination-active-border-color: var(--bs-primary-rgb);
   }
 
+  .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px 0;
+  }
+
 /* Home Style */
 @media(min-width:1200px){
     .home {
@@ -87,17 +95,21 @@ p {
     }
 }
 
-
-.home-title::before{
-  content:url(../img/stars.svg);
-  position: absolute;
-  left: -50px;
-  top: -30px;
+@media(min-width:1024px) {
+    .home {
+        background: 
+        url('../img/human-1.svg') left bottom no-repeat,
+        url('../img/human-2.svg') right bottom no-repeat,
+        url('../img/noise-bg.svg') left top repeat,
+        var(--background-color);
+        background-size: 300px;
+    }
+    
 }
 
-.home-title::after{
-    content:url(../img/stars.svg);
-    position: absolute;
-    right: -50px;
-    bottom: -30px;
-  }
+@media(max-width:480px) {
+    main {
+        margin-top: 25%;
+    }
+    
+}
