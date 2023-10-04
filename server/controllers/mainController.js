@@ -15,3 +15,21 @@ exports.about = async(req,res)=> {
     }
     res.render('about.ejs',{locals})
 }
+
+// GET Feature page
+exports.features = async(req,res)=> {
+    const locals = {
+        title: "Features",
+        description: "Free Notes App"
+    }
+    res.render('features.ejs',{locals})
+}
+
+// GET faq
+exports.faq = async(req,res)=> {
+    const locals = {
+        title: "FAQ",
+        description: "Free Notes App"
+    }
+    res.render('faq.ejs',{locals})
+}
