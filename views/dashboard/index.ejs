@@ -21,7 +21,35 @@
             </a>
           </div>
         </div>
-      <%  }} else { %>
+        <% } %>
+        <!-- If have notes in the database then display Pagination -->
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center mt-5">
+              <% if (current == 1) { %>
+              <%# at page1 disable the previous btn %>
+                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+              <% } else { %>
+               <%# access previous page by (current page -1) %>
+                <li class="page-item"><a class="page-link" href="/dashboard?page=<%= current - 1 %>">Previous</a></li>
+              <% } %>
+              <%# For each page number, it checks if it is the current page. If it's the current page, it displays the page number as plain text with an "active" appearance (typically highlighting it). If it's not the current page, it generates a clickable link to navigate to that page with the appropriate page number as a query parameter in the URL.  %>
+              <% for (let i = 1; i <= pages; i++) { %>
+                <% if (i == current) { %>
+                  <li class="page-item active"><span class="page-link"><%= i %></span></li>
+                <% } else { %>
+                  <li class="page-item"><a class="page-link" href="/dashboard?page=<%= i %>"><%= i %></a></li>
+                <% } %>
+              <% } %>
+        
+              <% if (current == pages) { %>
+                <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+              <% } else { %>
+                <li class="page-item"><a class="page-link" href="/dashboard?page=<%= current + 1 %>">Next</a></li>
+              <% } %>
+            </ul>
+          </nav>
+          <!-- No data in the database, don't display pagination and display the above message -->
+      <%  } else { %>
         <div class="row">
           <div class="col-3">
             <img src="/img/human-3.svg" alt="Human pointing hand toward a create button">
@@ -34,37 +62,6 @@
           </div>
         </div>
       <% } %>
-
-      <% if (notes.length > 0) { %>
-        <!-- Display notes here -->
-
-        <!-- Pagination -->
-        <nav aria-label="Page navigation example">
-          <ul class="pagination justify-content-center mt-5">
-            <% if (current == 1) { %>
-              <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-            <% } else { %>
-              <li class="page-item"><a class="page-link" href="/dashboard?page=<%= current - 1 %>">Previous</a></li>
-            <% } %>
-      
-            <% for (let i = 1; i <= pages; i++) { %>
-              <% if (i == current) { %>
-                <li class="page-item active"><span class="page-link"><%= i %></span></li>
-              <% } else { %>
-                <li class="page-item"><a class="page-link" href="/dashboard?page=<%= i %>"><%= i %></a></li>
-              <% } %>
-            <% } %>
-      
-            <% if (current == pages) { %>
-              <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
-            <% } else { %>
-              <li class="page-item"><a class="page-link" href="/dashboard?page=<%= current + 1 %>">Next</a></li>
-            <% } %>
-          </ul>
-        </nav>
-      
-      <% } %>
-
 </div>
 
 
