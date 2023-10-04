@@ -1,0 +1,4 @@
+build:
+  - name: Install Dependencies
+    nodeVersion: 16
+    buildCommand: npm install
