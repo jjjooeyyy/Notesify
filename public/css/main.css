@@ -76,13 +76,13 @@ p {
     --bs-pagination-active-border-color: var(--bs-primary-rgb);
   }
 
-  .footer {
+/*   .footer {
     position: absolute;
     bottom: -7rem;
     left: 0;
     right: 0;
     padding: 10px 0;
-  }
+  } */
 
 /* Home Style */
 @media(min-width:1200px){
