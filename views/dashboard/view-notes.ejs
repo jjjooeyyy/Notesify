@@ -22,7 +22,7 @@
 
         <div class="mb-3">
            <h2> Title: </h2> <p><%= note.title %></p>
-           <p><%= note.createdAt %></p>
+           <p><%= note.createdAt.toISOString() %></p>
           </div>
           <div class="mb-3">
             <h2>Content</h2>
