@@ -77,8 +77,8 @@ p {
   }
 
   .footer {
-    position: fixed;
-    bottom: 0;
+    position: absolute;
+    bottom: -5rem;
     left: 0;
     right: 0;
     padding: 10px 0;
