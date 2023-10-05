@@ -104,10 +104,6 @@ p {
         var(--background-color);
         background-size: 300px;
     }
-    .noNote {
-        display: none;
-    }
-    
 }
 
 @media(max-width:480px) {
