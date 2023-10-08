@@ -12,31 +12,29 @@ exports.dashboard = async (req, res) => {
   };
 
   try {
-    /* fetching a list of notes from a MongoDB database, sorting them by the updatedAt field in descending order, filtering them to include only notes belonging to a specific user, projecting only a subset of fields for each note */
-
+    /* fetching a list of notes from a MongoDB database, sorting them by the updatedAt field in descending order, filtering them to include only notes belonging to a specific user, projecting only a subset of fields for each note */ 
+    const escapeRegExp = (text) => {
+      return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+    };
+    
+    const escapedTitle = escapeRegExp(req.user.title);
+    
     const notes = await Note.aggregate([
       { $sort: { updatedAt: -1 } },
       { $match: { user: new mongoose.Types.ObjectId(req.user.id) } },
       {
-        $addFields: {
+        $project: {
           title: {
             $substr: [
-              {
-                $regexReplace: {
-                  input: "$title",
-                  find: /[.*+?^${}()|[\]\\]/g,
-                  replacement: "\\$&", // Escape special characters
-                },
-              },
-              0,30,
+              "$title",
+              0,
+              30,
             ],
           },
           body: { $substr: ["$body", 0, 100] },
         },
       },
     ])
-    
-    
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
