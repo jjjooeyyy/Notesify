@@ -19,11 +19,22 @@ exports.dashboard = async (req, res) => {
       { $match: { user: new mongoose.Types.ObjectId(req.user.id) } },
       {
         $project: {
-          title: { $substr: ["$title", 0, 30] },
+          title: {
+            $substr: [
+              {
+                $regexEscape: {
+                  input: "$title",
+                  chars: ".+*?^$()[]{}\\|"
+                }
+              },
+              0,30
+            ]
+          },
           body: { $substr: ["$body", 0, 100] },
         },
       },
     ])
+    
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
