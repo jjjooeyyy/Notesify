@@ -18,22 +18,24 @@ exports.dashboard = async (req, res) => {
       { $sort: { updatedAt: -1 } },
       { $match: { user: new mongoose.Types.ObjectId(req.user.id) } },
       {
-        $project: {
+        $addFields: {
           title: {
             $substr: [
               {
-                $regexEscape: {
+                $regexReplace: {
                   input: "$title",
-                  chars: ".+*?^$()[]{}\\|"
-                }
+                  find: /[.*+?^${}()|[\]\\]/g,
+                  replacement: "\\$&", // Escape special characters
+                },
               },
-              0,30
-            ]
+              0,30,
+            ],
           },
           body: { $substr: ["$body", 0, 100] },
         },
       },
     ])
+    
     
       .skip(perPage * page - perPage)
       .limit(perPage)
