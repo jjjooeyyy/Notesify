@@ -3,7 +3,10 @@ const mongoose = require("mongoose");
 
 // Define the escapeRegExp function
 const escapeRegExp = (text) => {
-  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  if (text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  }
+  return '';
 };
 
 // GET Dashboard
@@ -17,7 +20,12 @@ exports.dashboard = async (req, res) => {
   };
 
   try {
-    // Correct the usage of req.user.title if it's the correct field for the title
+    if (!req.user) {
+      // Handle the case where there's no authenticated user
+      return res.redirect("views/401.ejs"); 
+    }
+
+    // Correct the usage of the user property (e.g., req.user.title)
     const escapedTitle = escapeRegExp(req.user.title);
 
     const notes = await Note.aggregate([
@@ -52,6 +60,8 @@ exports.dashboard = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    // Handle the error, perhaps by rendering an error page
+    res.status(500).render('views/login-failure.ejs'); // Example: Render a generic error page
   }
 };
 
