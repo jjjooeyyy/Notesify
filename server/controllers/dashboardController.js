@@ -148,7 +148,6 @@ exports.dashboardSearch = async (req, res) => {
 };
 
 // POST search
-// POST search
 exports.dashboardPostSearch = async (req, res) => {
   try {
     let searchTerm = req.body.searchTerm;
