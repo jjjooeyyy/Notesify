@@ -4,7 +4,13 @@ const mongoose = require("mongoose");
 // Define the escapeRegExp function
 const escapeRegExp = (text) => {
   if (text) {
-    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+    // Exclude backslash (\) from escaping to allow special characters
+    return text.replace(/[-[\]{}()*+?.,^$|#\s]/g, (match) => {
+      if (match === '\\') {
+        return match; // Don't escape backslash
+      }
+      return `\\${match}`; // Escape other special characters
+    });
   }
   return '';
 };
@@ -24,19 +30,6 @@ exports.dashboard = async (req, res) => {
       // Handle the case where there's no authenticated user
       return res.redirect("views/401.ejs"); 
     }
-
-    const escapeRegExp = (text) => {
-      if (text) {
-        // Exclude backslash (\) from escaping to allow special characters
-        return text.replace(/[-[\]{}()*+?.,^$|#\s]/g, (match) => {
-          if (match === '\\') {
-            return match; // Don't escape backslash
-          }
-          return `\\${match}`; // Escape other special characters
-        });
-      }
-      return '';
-    };
     
     // Usage in your dashboard route
     const escapedTitle = escapeRegExp(req.user.title);
@@ -68,7 +61,6 @@ exports.dashboard = async (req, res) => {
     .limit(perPage)
     .exec();
     
-
     const count = await Note.count();
     console.log(req.user); // Log the req.user object
 
