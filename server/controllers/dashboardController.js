@@ -1,6 +1,11 @@
 const Note = require("../models/Notes");
 const mongoose = require("mongoose");
 
+// Define the escapeRegExp function
+const escapeRegExp = (text) => {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+};
+
 // GET Dashboard
 exports.dashboard = async (req, res) => {
   let perPage = 8;
@@ -12,13 +17,9 @@ exports.dashboard = async (req, res) => {
   };
 
   try {
-    /* fetching a list of notes from a MongoDB database, sorting them by the updatedAt field in descending order, filtering them to include only notes belonging to a specific user, projecting only a subset of fields for each note */ 
-    const escapeRegExp = (text) => {
-      return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-    };
-    
+    // Correct the usage of req.user.title if it's the correct field for the title
     const escapedTitle = escapeRegExp(req.user.title);
-    
+
     const notes = await Note.aggregate([
       { $sort: { updatedAt: -1 } },
       { $match: { user: new mongoose.Types.ObjectId(req.user.id) } },
@@ -42,7 +43,7 @@ exports.dashboard = async (req, res) => {
     const count = await Note.count();
 
     res.render("dashboard/index", {
-      userName: req.user.firstName,
+      userName: req.user.firstName, // Assuming firstName is the correct property for the user's name
       locals,
       notes,
       layout: "../views/layouts/dashboard",
