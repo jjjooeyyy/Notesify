@@ -51,14 +51,14 @@ exports.dashboard = async (req, res) => {
             $substrBytes: [
               "$title",
               0,
-              30,
+              30 * 4,
             ],
           },
           body: {
             $substrBytes: [
               "$body",
               0,
-              100,
+              100 * 4,
             ],
           },
         },
