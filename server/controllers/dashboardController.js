@@ -49,7 +49,8 @@ exports.dashboard = async (req, res) => {
       .exec();
 
     const count = await Note.count();
-
+    console.log(req.user); // Log the req.user object
+    
     res.render("dashboard/index", {
       userName: req.user.firstName, // Assuming firstName is the correct property for the user's name
       locals,
@@ -61,7 +62,7 @@ exports.dashboard = async (req, res) => {
   } catch (error) {
     console.log(error);
     // Handle the error, perhaps by rendering an error page
-    res.status(500).render('views/login-failure.ejs'); // Example: Render a generic error page
+    // res.status(500).render('views/login-failure.ejs'); // Example: Render a generic error page
   }
 };
 
