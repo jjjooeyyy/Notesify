@@ -8,7 +8,9 @@ const connectDB = async() => {
       useCreateIndex: true, 
       useFindAndModify: false, 
       useCreateIndex: true,
-      useFindAndModify: false
+      useFindAndModify: false,
+      connectTimeoutMS: 30000, // Increase this value as needed
+      socketTimeoutMS: 30000, // Increase this value as needed
     });
     console.log(`Database Connected: ${conn.connection.host}`);
   } catch (error) {

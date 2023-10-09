@@ -148,26 +148,29 @@ exports.dashboardSearch = async (req, res) => {
 };
 
 // POST search
+// POST search
 exports.dashboardPostSearch = async (req, res) => {
-    try {
-        let searchTerm = req.body.searchTerm;
-        //removes any special characters (characters other than letters, numbers, and spaces)
-        const searchNoSpecialChars = searchTerm.replace(/[^a-zA-Z0-9 ]/g, "");
+  try {
+    let searchTerm = req.body.searchTerm;
+    
+    // Create a Unicode-aware regular expression
+    const regex = new RegExp(searchTerm, 'iu');
 
-        const searchResults = await Note.find({
-            // $or : it will match notes where either the title or the body matches the search term (ignoring special characters).
-            $or: [
-                {title: {$regex: new RegExp(searchNoSpecialChars,'i')}},
-                // 'i' for case-insensitive (it will match text regardless of whether the characters are in uppercase or lowercase.)
-                {body: {$regex: new RegExp(searchNoSpecialChars,'i')}},
-            ],
-        }).where({user:req.user.id});
+    const searchResults = await Note.find({
+      // Use the Unicode-aware regular expression in your queries
+      $or: [
+        { title: { $regex: regex } },
+        { body: { $regex: regex } },
+      ],
+    }).where({ user: req.user.id });
 
-        res.render('dashboard/search',
-        {searchResults,
-        layout: "../views/layouts/dashboard"
-        })
-    }catch(error) {
-        console.log(error);
-    }
+    res.render('dashboard/search', {
+      searchResults,
+      layout: "../views/layouts/dashboard",
+    });
+  } catch (error) {
+    console.log(error);
+    // Handle the error, perhaps by rendering an error page
+    // res.status(500).render('views/error.ejs'); // Example: Render a generic error page
+  }
 };
