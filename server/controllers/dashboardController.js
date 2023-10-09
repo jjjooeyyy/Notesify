@@ -25,32 +25,53 @@ exports.dashboard = async (req, res) => {
       return res.redirect("views/401.ejs"); 
     }
 
-    // Correct the usage of the user property (e.g., req.user.title)
+    const escapeRegExp = (text) => {
+      if (text) {
+        // Exclude backslash (\) from escaping to allow special characters
+        return text.replace(/[-[\]{}()*+?.,^$|#\s]/g, (match) => {
+          if (match === '\\') {
+            return match; // Don't escape backslash
+          }
+          return `\\${match}`; // Escape other special characters
+        });
+      }
+      return '';
+    };
+    
+    // Usage in your dashboard route
     const escapedTitle = escapeRegExp(req.user.title);
-
+    const escapedContent = escapeRegExp(req.user.body);
+    
     const notes = await Note.aggregate([
       { $sort: { updatedAt: -1 } },
       { $match: { user: new mongoose.Types.ObjectId(req.user.id) } },
       {
         $project: {
           title: {
-            $substr: [
+            $substrBytes: [
               "$title",
               0,
               30,
             ],
           },
-          body: { $substr: ["$body", 0, 100] },
+          body: {
+            $substrBytes: [
+              "$body",
+              0,
+              100,
+            ],
+          },
         },
       },
     ])
-      .skip(perPage * page - perPage)
-      .limit(perPage)
-      .exec();
+    .skip(perPage * page - perPage)
+    .limit(perPage)
+    .exec();
+    
 
     const count = await Note.count();
     console.log(req.user); // Log the req.user object
-    
+
     res.render("dashboard/index", {
       userName: req.user.firstName, // Assuming firstName is the correct property for the user's name
       locals,
