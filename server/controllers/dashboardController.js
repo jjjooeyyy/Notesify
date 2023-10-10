@@ -13,7 +13,7 @@ const escapeRegExp = (text) => {
     });
   }
   return '';
-};
+}; 
 
 // GET Dashboard
 exports.dashboard = async (req, res) => {
