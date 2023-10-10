@@ -1,6 +1,15 @@
 const Note = require("../models/Notes");
 const mongoose = require("mongoose");
 
+// Function to truncate text while preserving whole characters
+const truncateText = (text, maxLength) => {
+  if (text.length <= maxLength) {
+    return text;
+  }
+  const truncated = text.substr(0, maxLength);
+  return truncated.substr(0, truncated.lastIndexOf(' ')) + '...';
+};
+
 // Define the escapeRegExp function
 const escapeRegExp = (text) => {
   if (text) {
@@ -25,58 +34,46 @@ exports.dashboard = async (req, res) => {
     description: "Free Notes App",
   };
 
-  try {
+    try {
     if (!req.user) {
       // Handle the case where there's no authenticated user
       return res.redirect("views/401.ejs"); 
     }
     
-    // Usage in your dashboard route
-    const escapedTitle = escapeRegExp(req.user.title);
-    const escapedContent = escapeRegExp(req.user.body);
-    
-    const maxLength = 100; // Maximum number of characters to display
-
-const notes = await Note.aggregate([
-  { $sort: { updatedAt: -1 } },
-  { $match: { user: new mongoose.Types.ObjectId(req.user.id) } },
-  {
-    $project: {
-      title: {
-        $cond: [
-          { $lte: [{ $strLenCP: "$title" }, maxLength] },
-          "$title",
-          {
-            $concat: [
-              { $substrBytes: ["$title", 0, maxLength] },
-              "..."
-            ]
-          }
-        ]
+    const notes = await Note.aggregate([
+      { $sort: { updatedAt: -1 } },
+      { $match: { user: new mongoose.Types.ObjectId(req.user.id) } },
+      {
+        $project: {
+          title: {
+            $substrBytes: [
+              "$title",
+              0,
+              100 * 4, // Truncate titles to 100 characters
+            ],
+          },
+          body: {
+            $substrBytes: [
+              "$body",
+              0,
+              200 * 4, // Truncate bodies to 200 characters
+            ],
+          },
+        },
       },
-      body: {
-        $cond: [
-          { $lte: [{ $strLenCP: "$body" }, maxLength] },
-          "$body",
-          {
-            $concat: [
-              { $substrBytes: ["$body", 0, maxLength] },
-              "..."
-            ]
-          }
-        ]
-      },
-    },
-  },
-])
-.skip(perPage * page - perPage)
-.limit(perPage)
-.exec();
-
-
+    ])
+    .skip(perPage * page - perPage)
+    .limit(perPage)
+    .exec();
     
     const count = await Note.count();
     console.log(req.user); // Log the req.user object
+
+    // Truncate the title and body fields in each note
+    notes.forEach((note) => {
+      note.title = truncateText(note.title, 100);
+      note.body = truncateText(note.body, 200);
+    });
 
     res.render("dashboard/index", {
       userName: req.user.firstName, // Assuming firstName is the correct property for the user's name
