@@ -36,30 +36,31 @@ exports.dashboard = async (req, res) => {
     const escapedContent = escapeRegExp(req.user.body);
     
     const notes = await Note.aggregate([
-      { $sort: { updatedAt: -1 } },
-      { $match: { user: new mongoose.Types.ObjectId(req.user.id) } },
-      {
-        $project: {
-          title: {
-            $substrBytes: [
-              "$title",
-              0,
-              30 * 4,
-            ],
-          },
-          body: {
-            $substrBytes: [
-              "$body",
-              0,
-              100 * 4,
-            ],
-          },
-        },
+  { $sort: { updatedAt: -1 } },
+  { $match: { user: new mongoose.Types.ObjectId(req.user.id) } },
+  {
+    $project: {
+      title: {
+        $substrBytes: [
+          "$title",
+          0,
+          { $strLenBytes: "$title" }, // Use $strLenBytes to get the length in bytes
+        ],
       },
-    ])
-    .skip(perPage * page - perPage)
-    .limit(perPage)
-    .exec();
+      body: {
+        $substrBytes: [
+          "$body",
+          0,
+          { $strLenBytes: "$body" }, // Use $strLenBytes to get the length in bytes
+        ],
+      },
+    },
+  },
+])
+.skip(perPage * page - perPage)
+.limit(perPage)
+.exec();
+
     
     const count = await Note.count();
     console.log(req.user); // Log the req.user object
