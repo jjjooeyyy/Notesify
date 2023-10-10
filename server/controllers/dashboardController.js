@@ -35,24 +35,36 @@ exports.dashboard = async (req, res) => {
     const escapedTitle = escapeRegExp(req.user.title);
     const escapedContent = escapeRegExp(req.user.body);
     
-    const notes = await Note.aggregate([
+    const maxLength = 100; // Maximum number of characters to display
+
+const notes = await Note.aggregate([
   { $sort: { updatedAt: -1 } },
   { $match: { user: new mongoose.Types.ObjectId(req.user.id) } },
   {
     $project: {
       title: {
-        $substrBytes: [
+        $cond: [
+          { $lte: [{ $strLenCP: "$title" }, maxLength] },
           "$title",
-          0,
-          { $strLenBytes: "$title" }, // Use $strLenBytes to get the length in bytes
-        ],
+          {
+            $concat: [
+              { $substrBytes: ["$title", 0, maxLength] },
+              "..."
+            ]
+          }
+        ]
       },
       body: {
-        $substrBytes: [
+        $cond: [
+          { $lte: [{ $strLenCP: "$body" }, maxLength] },
           "$body",
-          0,
-          { $strLenBytes: "$body" }, // Use $strLenBytes to get the length in bytes
-        ],
+          {
+            $concat: [
+              { $substrBytes: ["$body", 0, maxLength] },
+              "..."
+            ]
+          }
+        ]
       },
     },
   },
@@ -60,6 +72,7 @@ exports.dashboard = async (req, res) => {
 .skip(perPage * page - perPage)
 .limit(perPage)
 .exec();
+
 
     
     const count = await Note.count();
