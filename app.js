@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const methodOverride = require("method-override");
@@ -8,8 +7,10 @@ const session = require('express-session');
 const passport = require('passport');
 const MongoStore = require('connect-mongo');
 
+const path = require('path'); // Added 'path' module
+
 const app = express();
-const port = 3000 || process.env.PORT;
+const port = process.env.PORT || 3000; // Adjusted port definition
 
 app.use(session({
   secret: 'keyboard cat',
@@ -18,28 +19,26 @@ app.use(session({
   store: MongoStore.create({
     mongoUrl: process.env.MONGODB_URI
   }),
-  //cookie: { maxAge: new Date ( Date.now() + (3600000) ) } 
-  // Date.now() - 30 * 24 * 60 * 60 * 1000
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
-// Conntect to Database
-connectDB();  
 
-// Static Files
-app.use(express.static('public'));
+// Connect to Database
+connectDB();
 
-// Templating Engine
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Set up Templating Engine
 app.use(expressLayouts);
-app.set('layout', './layouts/main');
+app.set('layout', 'layouts/main'); // Adjusted path to the layout file
 app.set('view engine', 'ejs');
-
-
+app.set('views', path.join(__dirname, 'views'));
 
 // Routes
 app.use('/', require('./server/routes/auth'));
@@ -48,10 +47,8 @@ app.use('/', require('./server/routes/dashboard'));
 
 // Handle 404
 app.get('*', function(req, res) {
-  //res.status(404).send('404 Page Not Found.')
-  res.status(404).render('404');
-})
-
+  res.status(404).render('404'); // Rendering '404.ejs' for all unmatched routes
+});
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
